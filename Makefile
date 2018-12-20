@@ -1,5 +1,5 @@
 all:
-	gcc todo.c -pedantic -o main -g
+	gcc todo.c -pedantic -o /bin/todo -g
 	
 run:
-	./main
+	./todo
