@@ -14,9 +14,7 @@
 #define COLOR_BRRED   "\x1b[91m"
 #define COLOR_BRWHITE "\x1b[97m"
 #define COLOR_RESET   "\x1b[0m"
-// #define COLOR_RESET "0x1B;RESET;31;41"
 
-// #define BG_BLACK   "\x1b[40m"
 #define BG_RED     "\x1b[41m"
 #define BG_GREEN   "\x1b[42m"
 #define BG_YELLOW  "\x1b[43m"
@@ -341,7 +339,7 @@ void helpTODO() {
 
 	printf(COLOR_CYAN  "add: ");
 	printf(COLOR_WHITE "add a todo to the list. Usage: ");
-	printf(COLOR_GREEN "todo add <msg> <label>\n");
+	printf(COLOR_GREEN "todo add <msg> <label> <category>\n");
 
 	printf(COLOR_CYAN  "update: ");
 	printf(COLOR_WHITE "update a todo in the list. Usage: ");
@@ -350,6 +348,22 @@ void helpTODO() {
 	printf(COLOR_CYAN  "remove: ");
 	printf(COLOR_WHITE "remove a todo from the list. Usage: ");
 	printf(COLOR_GREEN "todo remove\n");
+
+	printf(COLOR_CYAN  "edit: ");
+	printf(COLOR_WHITE "open vim to directly edit the todo file. Usage: ");
+	printf(COLOR_GREEN "todo edit\n");
+
+	printf(COLOR_CYAN  "category: ");
+	printf(COLOR_WHITE "lists all categories. Usage: ");
+	printf(COLOR_GREEN "todo category\n");
+
+	printf(COLOR_CYAN  "category add: ");
+	printf(COLOR_WHITE "add a category. Usage: ");
+	printf(COLOR_GREEN "todo category add <name>\n");
+
+	printf(COLOR_CYAN  "category remove: ");
+	printf(COLOR_WHITE "remove a category. Usage: ");
+	printf(COLOR_GREEN "todo category remove <name>\n");
 
 	printf(COLOR_CYAN  "help: ");
 	printf(COLOR_WHITE "shows this beautiful message. Usage: ");
@@ -372,11 +386,12 @@ int main(int argc, char* argv[]) {
 			if (argc == 3) insertTODO(argv[2], 3, "DEFAULT");
 			else if (argc == 4) insertTODO(argv[2], toint(argv[3]), "DEFAULT");
 			else if (argc == 5) insertTODO(argv[2], toint(argv[3]), argv[4]);
-			else printf(COLOR_RED "Invalid entry! Use " COLOR_BRRED "todo add <msg> <label>\n" COLOR_RESET);
+			else printf(COLOR_RED "Invalid entry! Use " COLOR_BRRED "todo add <msg> <label> <category>\n" COLOR_RESET);
 		} else if (!strcmp(arg, "update")) updateTODO();
 		else if   (!strcmp(arg, "remove")) removeTODO(argc >= 3 && !strcmp(argv[2], "all"));
 		else if   (!strcmp(arg, "help")) helpTODO();
 		else if   (!strcmp(arg, "edit")) system("vim " FILENAME);
+		else if   (!strcmp(arg, "vim")) system("vim " FILENAME);
 		else if   (!strcmp(arg, "category") || !strcmp(arg, "tag")) {
 			if (argc == 2) listCategory();
 			else if (argc == 3 && !strcmp(argv[2], "list")) listCategory();
