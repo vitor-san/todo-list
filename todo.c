@@ -392,6 +392,7 @@ int main(int argc, char* argv[]) {
 		else if   (!strcmp(arg, "help")) helpTODO();
 		else if   (!strcmp(arg, "edit")) system("vim " FILENAME);
 		else if   (!strcmp(arg, "vim")) system("vim " FILENAME);
+		else if   (!strcmp(arg, "subl")) system("subl " FILENAME);
 		else if   (!strcmp(arg, "category") || !strcmp(arg, "tag")) {
 			if (argc == 2) listCategory();
 			else if (argc == 3 && !strcmp(argv[2], "list")) listCategory();
