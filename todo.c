@@ -59,7 +59,7 @@ void emptyFile() {
 /** Print a todo according to its label */
 void printTODO(char* str, int label, bool category, int pos) {
 	if (category) {
-		printf(COLOR_BRWHITE "%s:\n" COLOR_RESET, str+1);
+		printf(COLOR_BRWHITE "%s:\n" COLOR_RESET, str);
 		return;
 	}
 
@@ -92,25 +92,32 @@ TODO* listTODO(bool usePosition, bool print) {
 	// if (print)
 	// 	printf(COLOR_GREEN "Here is your list:\n" COLOR_RESET);
 
-	char msg[256], category[256];
+	char msg[256], category[256], opt;
 	int label, pos = 0;
 
 	TODO* list = NULL;
 
-	while(fscanf(todo, "%[^\n\r] ", msg) != EOF) {
-		if (msg[0] != '%') fscanf(todo, "%d ", &label);
+	// while(fscanf(todo, "%[^\n\r] ", msg) != EOF) {
+	// 	if (msg[0] != '%') fscanf(todo, "%d ", &label);
+
+	while(fscanf(todo, "%c ", &opt) != EOF) {
+		if (opt == '%') fscanf(todo, "%[^\n\r] ", msg);
+		else fscanf(todo, "%[^[][%d] ", msg, &label);
+
+		// printf("__ %c __ %s %d\n", opt, msg, label);
+		// print = false;
 		
 		pos++;
 
 		if (usePosition) {
 			list = realloc(list, pos * sizeof(TODO));
-			strcpy(list[pos-1].msg, msg[0] == '%' ? msg+1 : msg);
-			list[pos-1].category = msg[0] == '%';
+			strcpy(list[pos-1].msg, msg);
+			list[pos-1].category = opt == '%';
 			list[pos-1].label = label;
 		}
 
 		if (print)
-			printTODO(msg, label, msg[0] == '%', usePosition ? pos : -1);
+			printTODO(msg, label, opt == '%', usePosition ? pos : -1);
 	}
 
 	fclose(todo);
@@ -131,7 +138,7 @@ void todoFromList(TODO* list, int size) {
 		if (list[i].category)
 			fprintf(todo, "%%%s\n", list[i].msg);
 		else
-			fprintf(todo, "%s\n%d\n", list[i].msg, list[i].label);
+			fprintf(todo, "-%s[%d]\n", list[i].msg, list[i].label);
 	}
 	fclose(todo);
 }
@@ -352,6 +359,10 @@ void helpTODO() {
 	printf(COLOR_CYAN  "edit: ");
 	printf(COLOR_WHITE "open vim to directly edit the todo file. Usage: ");
 	printf(COLOR_GREEN "todo edit\n");
+
+	printf(COLOR_CYAN  "subl: ");
+	printf(COLOR_WHITE "open sublime to directly edit the todo file. Usage: ");
+	printf(COLOR_GREEN "todo subl\n");
 
 	printf(COLOR_CYAN  "category: ");
 	printf(COLOR_WHITE "lists all categories. Usage: ");
