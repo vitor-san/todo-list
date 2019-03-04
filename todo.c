@@ -89,23 +89,14 @@ TODO* listTODO(bool usePosition, bool print) {
 		return NULL;
 	}
 
-	// if (print)
-	// 	printf(COLOR_GREEN "Here is your list:\n" COLOR_RESET);
-
 	char msg[256], category[256], opt;
 	int label, pos = 0;
 
 	TODO* list = NULL;
 
-	// while(fscanf(todo, "%[^\n\r] ", msg) != EOF) {
-	// 	if (msg[0] != '%') fscanf(todo, "%d ", &label);
-
 	while(fscanf(todo, "%c ", &opt) != EOF) {
 		if (opt == '%') fscanf(todo, "%[^\n\r] ", msg);
 		else fscanf(todo, "%[^[][%d] ", msg, &label);
-
-		// printf("__ %c __ %s %d\n", opt, msg, label);
-		// print = false;
 		
 		pos++;
 
@@ -129,6 +120,47 @@ TODO* listTODO(bool usePosition, bool print) {
 
 	quantity = pos;
 	return list;
+}
+
+/** List all the todos from the list */
+void listTODO2() {
+	FILE* todo = fopen(FILENAME, "r+");
+	if (todo == NULL) {
+		fclose(todo);
+		emptyFile();
+		printf(COLOR_YELLOW "-- Nothing to do --\n" COLOR_RESET);
+		return;
+	}
+
+	char msg[256], curTag[256], opt;
+	int label, pos = 0;
+
+	while(fscanf(todo, "%c ", &opt) != EOF) {
+		label = -1;
+
+		if (opt == '%') fscanf(todo, "%[^\n\r] ", curTag);
+		else fscanf(todo, "%[^[][%d] ", msg, &label);
+
+		if (label != -1) {
+
+			switch(label) {
+				case 1: printf(COLOR_GREEN);
+						break;
+				case 2: printf(COLOR_BLUE);
+						break;
+				case 3: printf(COLOR_BRWHITE);
+						break;
+				default: printf(COLOR_YELLOW);
+			}
+			
+			printf("[%s] %s\n" COLOR_RESET, curTag, msg);
+			pos++;
+		}
+	}
+
+	if (pos == 0) {
+		printf(COLOR_YELLOW "-- Nothing to do --\n" COLOR_RESET);
+	}
 }
 
 /** Creates the TODO file according to a todo list */
@@ -404,6 +436,7 @@ int main(int argc, char* argv[]) {
 		else if   (!strcmp(arg, "edit")) system("vim " FILENAME);
 		else if   (!strcmp(arg, "vim")) system("vim " FILENAME);
 		else if   (!strcmp(arg, "subl")) system("subl " FILENAME);
+		else if   (!strcmp(arg, "-la")) listTODO2();
 		else if   (!strcmp(arg, "category") || !strcmp(arg, "tag")) {
 			if (argc == 2) listCategory();
 			else if (argc == 3 && !strcmp(argv[2], "list")) listCategory();
