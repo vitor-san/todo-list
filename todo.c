@@ -96,6 +96,7 @@ TODO* listTODO(bool usePosition, bool print) {
 
 	while(fscanf(todo, "%c ", &opt) != EOF) {
 		if (opt == '%') fscanf(todo, "%[^\n\r] ", msg);
+		else if (opt == '\n' || opt == '\r' || opt == ' ') continue;
 		else fscanf(todo, "%[^[][%d] ", msg, &label);
 		
 		pos++;
