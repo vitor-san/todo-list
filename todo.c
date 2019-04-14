@@ -167,9 +167,12 @@ void listTODO2() {
 /** Creates the TODO file according to a todo list */
 void todoFromList(TODO* list, int size) {
 	FILE* todo = fopen(FILENAME, "w");
-	for (int i = 0; i < size; i++) {
-		if (list[i].category)
+
+	for (int i = 0, ntags = 0; i < size; i++) {
+		if (list[i].category) {
+			if (ntags++ != 0) fprintf(todo, "\n");
 			fprintf(todo, "%%%s\n", list[i].msg);
+		}
 		else
 			fprintf(todo, "-%s[%d]\n", list[i].msg, list[i].label);
 	}
@@ -421,7 +424,7 @@ void helpTODO() {
 int main(int argc, char* argv[]) {
 
 	if (argc == 1) {
-		listTODO(false, true);
+		listTODO2();
 	} else {
 		char* arg = strlwr(argv[1]);
 
@@ -437,7 +440,7 @@ int main(int argc, char* argv[]) {
 		else if   (!strcmp(arg, "edit")) system("vim " FILENAME);
 		else if   (!strcmp(arg, "vim")) system("vim " FILENAME);
 		else if   (!strcmp(arg, "subl")) system("subl " FILENAME);
-		else if   (!strcmp(arg, "-la")) listTODO2();
+		else if   (!strcmp(arg, "-la")) listTODO(false, true);
 		else if   (!strcmp(arg, "category") || !strcmp(arg, "tag")) {
 			if (argc == 2) listCategory();
 			else if (argc == 3 && !strcmp(argv[2], "list")) listCategory();
